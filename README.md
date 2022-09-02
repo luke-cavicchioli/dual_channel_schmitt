@@ -12,3 +12,6 @@ trigger. The output is a digital output.
 When the signal is below reference - hist, the output is turned on, and when it
 is above reference + hist, it is turned off; otherwise, the signal remains the
 same as before.
+
+## License
+This code is of public domain.
