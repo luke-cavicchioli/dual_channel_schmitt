@@ -49,15 +49,25 @@ void loop() {
   sig1 = analogRead(A0);
   sig2 = analogRead(A3);
 
-  if (sig1 >= ref1 + HIST1) {
+  int th_high1 = ref1 + HIST1;
+  th_high1 = constrain(th_high1, 0, 1023);
+  int th_low1 = ref1 - HIST1;
+  th_low1 = constrain(th_low1, 0, 1023);
+
+  int th_high2 = ref2 + HIST2;
+  th_high2 = constrain(th_high2, 0, 1023);
+  int th_low2 = ref2 - HIST2;
+  th_low2 = constrain(th_low2, 0, 1023);
+
+  if (sig1 >= th_high1) {
     out1 = LOW;
-  } else if (sig1 < ref1 - HIST1) {
+  } else if (sig1 < th_low1) {
     out1 = HIGH;
   }
 
-  if (sig2 >= ref2 + HIST2) {
+  if (sig2 >= th_high2) {
     out2 = LOW;
-  } else if (sig2 < ref2 - HIST2) {
+  } else if (sig2 < th_low2) {
     out2 = HIGH;
   }
 
@@ -71,9 +81,9 @@ void loop() {
   Serial.print(sig1);
   Serial.print("    Out 1:  ");
   Serial.print(out1 == HIGH ? "H" : "L");
-  delay(10);
+  delay(500);
   Serial.print("\r");
   Serial.print("                                                             ");
-  Serial.print("\r")
+  Serial.print("\r");
 #endif
 }
