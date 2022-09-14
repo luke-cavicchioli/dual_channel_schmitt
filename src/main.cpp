@@ -22,12 +22,20 @@ int out2 = 0;
 int sig2 = 0;
 int ref2 = 0;
 
+#ifdef DEBUG
+int cycle_cnt = 0;
+#endif
+
 void setup() {
   // Channel connections:
   // Channel 1:
   //   - Ref in:  A1
   //   - Sig in:  A0
   //   - Trg out: D10
+  // analog pins are set to pull up mode in order to open circuit when input is
+  // disconnected. Note that this changes the input response.
+  pinMode(A1, INPUT_PULLUP);
+  pinMode(A0, INPUT_PULLUP);
   pinMode(10, OUTPUT);
   digitalWrite(10, LOW);
 
@@ -35,6 +43,8 @@ void setup() {
   //   - Ref in:  A2
   //   - Sig in:  A3
   //   - Trg out: D12
+  pinMode(A2, INPUT_PULLUP);
+  pinMode(A3, INPUT_PULLUP);
   pinMode(12, OUTPUT);
   digitalWrite(12, LOW);
 
@@ -75,15 +85,21 @@ void loop() {
   digitalWrite(12, out2);
 
 #ifdef DEBUG
-  Serial.print("Ref 1:  ");
-  Serial.print(ref1);
-  Serial.print("    Sig 1:  ");
-  Serial.print(sig1);
-  Serial.print("    Out 1:  ");
-  Serial.print(out1 == HIGH ? "H" : "L");
-  delay(500);
-  Serial.print("\r");
-  Serial.print("                                                             ");
-  Serial.print("\r");
+  if (cycle_cnt == 100) {
+    cycle_cnt = 0;
+    Serial.print("Ref 1:  ");
+    Serial.print(ref1);
+    Serial.print("    Sig 1:  ");
+    Serial.print(sig1);
+    Serial.print("    Out 1:  ");
+    Serial.print(out1 == HIGH ? "H" : "L");
+    delay(10);
+    Serial.print("\r");
+    Serial.print(
+        "                                                             ");
+    Serial.print("\r");
+  }
+
+  ++cycle_cnt;
 #endif
 }
